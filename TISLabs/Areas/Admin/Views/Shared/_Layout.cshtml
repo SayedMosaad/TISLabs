@@ -1,0 +1,367 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using TISLabs.Domain.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NATCO | Dashboard</title>
+    <link href="/Dashboard/dist/img/logo.png" rel="icon" type="image/x-icon" sizes="16x16">
+    <!-- Google Font: Source Sans Pro -->
+
+    <link rel="stylesheet" href="~/Admin/dist/lib/Fonts.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!--Animation CSS-->
+
+    <link rel="stylesheet" href="~/Admin/dist/lib/animate.min.css" />
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="~/Admin/plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="~/Admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="~/Admin/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="~/Admin/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="~/Admin/plugins/bs-stepper/css/bs-stepper.min.css">
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="~/Admin/plugins/dropzone/min/dropzone.min.css">
+    <!-- Ionicons -->
+    @*<link rel="stylesheet" href="~/Admin/dist/lib/ionicons.min.css">*@
+    @*<link rel="stylesheet" href="~/Admin/dist/lib/ionicons.min.css">*@
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/Admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/Admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="~/Admin/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Admin/dist/css/Main.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/Admin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/Admin/plugins/daterangepicker/daterangepicker.css">
+    <!--DatePicker-->
+    <link rel="stylesheet" href="~/Admin/plugins/datepicker/dist/css/bootstrap-datepicker.min.css">
+
+    <!-- summernote -->
+    @*<link rel="stylesheet" href="~/Admin/plugins/summernote/summernote-bs4.min.css">*@
+
+    @*<link href="~/Admin/dist/lib/summernote.min.css" rel="stylesheet">*@
+    <link href="~/Admin/dist/lib/summernote/summernote.min.css" rel="stylesheet">
+
+    <!-- Toastr Notification -->
+    <link href="~/Admin/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    @*<link rel="stylesheet" href="~/Admin/dist/lib/openiconic.min.css" />*@
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-foundation.min.css" integrity="sha512-FxxtEcqC30sYnk1uvdsbiBuRRAOjXQlSc/YPN5d9oVTBhsuqy3ptkPqkXinxwpscyhQz8I9BLa+EhlvxtwFTGg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed text-sm">
+    <div class="wrapper">
+
+
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white text-white navbar-light bg-info">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item border-right">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block border-right">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                </li>
+
+
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Navbar Search -->
+                <li class="nav-item border-left">
+                    <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <div class="navbar-search-block">
+                        <form class="form-inline">
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                                <div class="input-group-append">
+                                    <button class="btn btn-navbar" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+
+
+
+                    <!-- Messages Dropdown Menu -->
+                    <li class="nav-item dropdown border-left">
+                        <div id="PendingNotificationList">
+                            <a class="nav-link" data-toggle="dropdown" href="#">
+                                <i class="far fa-comments"></i>
+                                <span class="badge badge-danger navbar-badge">@ViewData["Notification"]</span>
+                            </a>
+
+
+                        </div>
+
+                    </li>
+                    <!-- Notifications Dropdown Menu -->
+                    @*<li class="nav-item dropdown border-left">
+                <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-bell"></i>
+                <span class="badge badge-warning navbar-badge">15</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">15 Notifications</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                <i class="fas fa-envelope mr-2"></i> 4 new messages
+                <span class="float-right text-muted text-sm">3 mins</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                <i class="fas fa-users mr-2"></i> 8 friend requests
+                <span class="float-right text-muted text-sm">12 hours</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                <i class="fas fa-file mr-2"></i> 3 new reports
+                <span class="float-right text-muted text-sm">2 days</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                </div>
+                </li>*@
+
+                    <li class="dropdown user user-menu border-left nav-item ">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <img src="/Dashboard/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs">
+                                @*@UserManager.GetUserName(User) <span class="fi-action-redo"></span>*@
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="/Dashboard/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                <p>
+                                    @*@UserManager.GetUserName(User)*@
+                                </p>
+                            </li>
+
+                            <li class="user-footer">
+
+                                <div class="float-left" bis_skin_checked="1">
+                                    <a class="btn btn-default btn-flat " href="#">Profile</a>
+                                </div>
+                                <div class="float-right" bis_skin_checked="1">
+                                    <a class="btn btn-default btn-flat " href="/Account/Logout">Sign out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                <li class="nav-item border-left">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+                <li class="nav-item border-left">
+                    <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+                        <i class="fas fa-th-large"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-navy elevation-4">
+            <!-- Brand Logo -->
+            <a asp-controller="Home" asp-action="Index" class="brand-link bg-info">
+                <img src="~/Admin/dist/img/logo.png" alt="Logo" class="brand-image img-circle elevation-3">
+                <span class="brand-text font-weight-bold">NATCO</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <!-- Sidebar user panel (optional) -->
+                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                        <div class="image">
+                            <img src="~/Admin/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        </div>
+                        <div class="info">
+                            <a href="#" class="d-block">@UserManager.GetUserName(User)</a>
+                        </div>
+                    </div>
+                }
+
+                <partial name="_MainSidebar" />
+
+
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Dashboard</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">@ViewContext.RouteData.Values["Controller"].ToString()</a></li>
+                                <li class="breadcrumb-item active">@ViewContext.RouteData.Values["Action"].ToString()</li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <section class="content">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <strong>
+                Copyright &copy;
+                <span id="copyright">
+                    <script>document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))</script>
+                </span>
+                <a href="#">NATCO</a>.
+            </strong>
+            All rights reserved.
+
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/Admin/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="~/Admin/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/Admin/plugins/chart.js/Chart.min.js"></script>
+    <!-- Sparkline -->
+    <script src="~/Admin/plugins/sparklines/sparkline.js"></script>
+    <!-- JQVMap -->
+    <script src="~/Admin/plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="~/Admin/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="~/Admin/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <!-- daterangepicker -->
+    <script src="~/Admin/plugins/moment/moment.min.js"></script>
+    <script src="~/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/Admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+    <!-- Select2 -->
+    <script src="~/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Bootstrap4 Duallistbox -->
+    <script src="~/Admin/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <!-- InputMask -->
+    <script src="~/Admin/plugins/moment/moment.min.js"></script>
+    <script src="~/Admin/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="~/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <!-- datepicker -->
+    <script src="~/Admin/plugins/datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <!-- bootstrap color picker -->
+    <script src="~/Admin/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/Admin/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Bootstrap Switch -->
+    <script src="~/Admin/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <!-- BS-Stepper -->
+    <script src="~/Admin/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+    <!-- dropzonejs -->
+    <script src="~/Admin/plugins/dropzone/min/dropzone.min.js"></script>
+
+    <!-- Summernote -->
+
+    <script src="~/Admin/dist/lib/summernote/summernote.min.js"></script>
+
+    <!--SweetAlert-->
+
+    <script src="~/Admin/dist/lib/sweetalert.js"></script>
+
+    <!--Custom Input-->
+    <script src="~/Admin/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <script>
+        $(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="~/Admin/dist/lib/datatable.js"></script>
+    <script src="~/Admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/Admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+
+
+    <script src="~/Admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/Admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/Admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script src="~/Admin/dist/js/main.js"></script>
+    <script src="~/Admin/dist/js/sidebar.js"></script>
+    <script src="~/Admin/dist/lib/layout.js"></script>
+    <partial name="_Validation" />
+
+
+
+    <script src="~/Admin/dist/lib/blockUI.js"></script>
+    @RenderSection("Scripts", false)
+
+</body>
+</html>

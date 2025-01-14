@@ -1,0 +1,100 @@
+﻿<!-- Sidebar Menu -->
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column " style="font-size:14px; font-weight:400" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+        with font-awesome or any other icon font library -->
+
+        <li class="nav-item">
+            <a asp-controller="Home" asp-action="Index" class="nav-link ">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Home
+                </p>
+            </a>
+        </li>
+
+
+        <div class="mainmenu-divider"></div>
+        @if (User.IsInRole("SuperAdmin"))
+        {
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>
+                        Administration
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="nav-link">
+                            <i class="nav-icon fas fa-users text-cyan"></i>
+                            <p>
+                                Users
+                            </p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a asp-area="Admin" asp-controller="Roles" asp-action="Index" class="nav-link">
+                            <i class="nav-icon fas fa-question text-green"></i>
+                            <p>
+                                Roles
+                            </p>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+            <div class="mainmenu-divider"></div>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="nav-link">
+                    <i class="nav-icon fas fa-question text-green"></i>
+                    <p>
+                        Configurations
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="News" asp-action="Index" class="nav-link">
+                    <i class="nav-icon fas fa-user text-primary"></i>
+                    <p>
+                        Contact Us
+                    </p>
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="Feedbacks" asp-action="Index" class="nav-link">
+                    <i class="nav-icon fas fa-user text-primary"></i>
+                    <p>
+                        Feedbacks
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="Subscriptions" asp-action="Index" class="nav-link">
+                    <i class="nav-icon fas fa-user text-primary"></i>
+                    <p>
+                        Subscriptions
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="Positions" asp-action="Index" class="nav-link">
+                    <i class="nav-icon fas fa-list text-primary"></i>
+                    <p>
+                        Job Positions
+                    </p>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+<!-- /.sidebar-menu -->
